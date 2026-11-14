@@ -31,8 +31,8 @@ format: ## Auto-fix style and formatting
 	$(BIN)/ruff check --fix src tests
 	$(BIN)/ruff format src tests
 
-seed: ## Generate the sample DuckDB database (step 1)
-	@echo "Not implemented yet: see step 1 in docs/DEVELOPMENT_PLAN.md"
+seed: ## Generate the sample DuckDB database (deterministic)
+	$(BIN)/python -m portfolio_agent.infrastructure.db.seed
 
 run: ## Run the agent CLI
 	$(BIN)/portfolio-agent
