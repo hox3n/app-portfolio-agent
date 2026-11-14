@@ -6,6 +6,15 @@ from typing import Literal, Self
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Platform = Literal["iOS", "Android"]  # platforms where the supposed apps are used
+Action = Literal["scale", "maintain", "cut"]
+Rule = Literal[
+    "roas_below_cut_threshold",
+    "roas_within_target_range",
+    "roas_above_scale_threshold",
+    "spend_too_low_to_scale",
+    "no_spend",
+]
+KpiMetric = Literal["installs", "ua_cost", "revenue", "profit", "roas", "cpi", "arpi"]
 
 
 class Period(BaseModel):
@@ -45,3 +54,44 @@ class DatasetInfo(BaseModel):
     date_min: date
     date_max: date
     row_count: int
+
+
+class KpiRow(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    app_name: str
+    platform: Platform
+    country: str
+    installs: int = Field(ge=0)
+    ua_cost: float = Field(ge=0)
+    revenue: float = Field(ge=0)
+    profit: float
+    roas: float | None = None
+    cpi: float | None = None
+    arpi: float | None = None
+
+    @property
+    def pair(self) -> tuple[str, str, str]:
+        return (self.app_name, self.platform, self.country)
+
+
+class Decision(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    app_name: str
+    platform: Platform
+    country: str
+    action: Action
+    rule: Rule
+    roas: float | None = None
+    profit: float
+
+
+class Anomaly(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    app_name: str
+    platform: Platform
+    country: str
+    metric: KpiMetric
+    previous: float
+    current: float
+    change_pct: float
+    direction: Literal["up", "down"]
