@@ -400,6 +400,10 @@ portfolio-agent   metadata: trace_id=3b9fa2e60f2349c8, session_id=9f87b5259e16
 └── respond
 ```
 
+The same kind of run in the LangSmith UI ("Compare profit and ROAS between France and Germany in 2024"): graph nodes with timings, each `ollama` LLM call with model, duration and tokens, the `tool:compute_kpis` call, and the verified answer in the output:
+
+![LangSmith trace of a Q&A run](docs/images/langsmith-trace.png)
+
 **Structured result (`--json`, abridged).** Every request returns this shape. `status` is `ok`, `refused`, `needs_clarification` or `error`:
 
 ```json
