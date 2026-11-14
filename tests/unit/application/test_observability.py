@@ -60,6 +60,13 @@ def test_secrets_redacted_and_long_values_truncated(stream: io.StringIO) -> None
     assert len(line["sql"]) == 501
 
 
+def test_token_counts_are_not_redacted(stream: io.StringIO) -> None:
+    configure_logging(stream=stream)
+    log_event(logger, "llm_call", prompt_tokens=120, output_tokens=8)
+    [line] = lines(stream)
+    assert (line["prompt_tokens"], line["output_tokens"]) == (120, 8)
+
+
 def test_level_filtering(stream: io.StringIO) -> None:
 
     configure_logging(level="WARNING", stream=stream)

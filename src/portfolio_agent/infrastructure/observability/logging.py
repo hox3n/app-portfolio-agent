@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import sys
 from datetime import UTC, datetime
 from typing import Any, Literal, TextIO
@@ -9,13 +10,13 @@ from typing import Any, Literal, TextIO
 from portfolio_agent.application.observability import current_trace_id
 
 ROOT_LOGGER = "portfolio_agent"
-REDACT_KEY_PARTS = ("token", "secret", "password", "api_key")
+REDACT_KEY = re.compile(r"(^|_)(token|secret|password|api_key)$")
 MAX_VALUE_CHARS = 500
 
 
 def _clean(key: str, value: Any) -> Any:
 
-    if any(part in key.lower() for part in REDACT_KEY_PARTS):
+    if REDACT_KEY.search(key.lower()):
         return "***"
 
     if isinstance(value, str) and len(value) > MAX_VALUE_CHARS:

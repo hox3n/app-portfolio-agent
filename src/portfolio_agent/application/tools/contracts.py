@@ -4,7 +4,7 @@ import math
 from datetime import date
 from typing import Any, Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from portfolio_agent.domain.models import (
     Action,
@@ -63,6 +63,11 @@ class MetricsQuery(ToolInput):
     countries: list[str] | None = Field(
         default=None, description="Countries to include; omit for all."
     )
+
+    @field_validator("apps", "platforms", "countries", mode="before")
+    @classmethod
+    def _wrap_single_value(cls, value: Any) -> Any:
+        return [value] if isinstance(value, str) else value
 
     @model_validator(mode="after")
     def _check_order(self) -> Self:

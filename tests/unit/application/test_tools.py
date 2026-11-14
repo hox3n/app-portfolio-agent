@@ -75,6 +75,12 @@ def test_fetch_metrics_with_filter(registry: ToolRegistry) -> None:
     assert {r.app_name for r in out.rows} == {"News"}
 
 
+def test_single_filter_value_accepted_as_list(registry: ToolRegistry) -> None:
+    args = {**JANUARY, "apps": "Puzzle", "platforms": "Android", "countries": "India"}
+    out = registry.call_typed("compute_kpis", args, KpisOutput)
+    assert [k.pair for k in out.kpis] == [("Puzzle", "Android", "India")]
+
+
 def test_unknown_app_lists_allowed_values(registry: ToolRegistry) -> None:
     result = registry.call("compute_kpis", {**JANUARY, "apps": ["Chess"]})
     assert result.error is not None

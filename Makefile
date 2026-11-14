@@ -40,3 +40,6 @@ run: ## Run the agent CLI
 clean: ## Remove caches (keeps .venv and data)
 	rm -rf .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +
+
+smoke: ## Check the local Ollama model (needs Ollama running)
+	$(BIN)/python scripts/llm_smoke.py
