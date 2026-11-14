@@ -1,1 +1,11 @@
 """Request/response contracts: Plan, AgentResult, ToolError."""
+
+from typing import Any
+
+from pydantic import BaseModel, Field
+
+
+class ToolError(BaseModel):
+    code: str
+    message: str
+    details: dict[str, Any] = Field(default_factory=dict)

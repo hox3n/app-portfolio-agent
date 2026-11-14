@@ -1,6 +1,7 @@
 """Interfaces the application depends on: LLM, metrics repository, exporter, sessions, tracer."""
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
+from pathlib import Path
 from typing import Any, Protocol
 
 from pydantic import BaseModel
@@ -31,3 +32,9 @@ class MetricsRepository(Protocol):
     ) -> list[MetricRow]: ...
 
     def run_select(self, sql: str, max_rows: int) -> QueryResult: ...
+
+
+class Exporter(Protocol):
+    def export_csv(
+        self, columns: Sequence[str], rows: Sequence[Mapping[str, Any]], name: str
+    ) -> Path: ...
