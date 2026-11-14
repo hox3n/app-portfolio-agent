@@ -43,8 +43,32 @@ def test_invalid_value_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_secrets_are_masked(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("SLACK_BOT_TOKEN", "xoxb-secret")
+    monkeypatch.setenv("LANGSMITH_API_KEY", "lsv2-secret")
     s = Settings()
-    assert s.slack_bot_token is not None
-    assert "xoxb-secret" not in repr(s)
-    assert s.slack_bot_token.get_secret_value() == "xoxb-secret"
+    assert s.langsmith_api_key is not None
+    assert "lsv2-secret" not in repr(s)
+    assert s.langsmith_api_key.get_secret_value() == "lsv2-secret"
+
+
+def env_names() -> set[str]:
+    names = set()
+    for name, field in Settings.model_fields.items():
+        alias = field.validation_alias
+        names.add(alias if isinstance(alias, str) else f"AGENT_{name.upper()}")
+    return names
+
+
+def test_env_example_documents_every_setting() -> None:
+    example = Path(__file__).resolve().parents[2] / ".env.example"
+    keys = {
+        line.split("=", 1)[0]
+        for line in example.read_text().splitlines()
+        if line and not line.startswith("#")
+    }
+    assert keys == env_names()
+
+
+def test_env_example_values_are_valid(tmp_path: Path) -> None:
+    example = Path(__file__).resolve().parents[2] / ".env.example"
+    (tmp_path / ".env").write_text(example.read_text())
+    assert Settings().anomaly_metrics == ["installs", "ua_cost", "revenue", "roas", "cpi"]

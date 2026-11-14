@@ -1,0 +1,252 @@
+[
+  {
+    "request": "Anything unusual last week?",
+    "result": {
+      "trace_id": "4cf56882f7214d9b",
+      "session_id": "357f7995585a",
+      "workflow": "anomaly_check",
+      "status": "ok",
+      "summary": "During the period from January 25 to January 31, 2025, there were a total of ten anomalies detected compared to the previous week. The most significant positive anomaly involved Countdown / iOS / France across revenue and installs with increases exceeding one hundred percent. Conversely, News / iOS / UK showed a sharp decline in roas while experiencing large cost increases. Paint / Android / Germany also recorded substantial drops in both roas and revenue during this timeframe.",
+      "data": {
+        "current_period": {
+          "start": "2025-01-25",
+          "end": "2025-01-31"
+        },
+        "previous_period": {
+          "start": "2025-01-18",
+          "end": "2025-01-24"
+        },
+        "anomaly_count": 10,
+        "top_anomalies": [
+          {
+            "pair": "Countdown / iOS / France",
+            "metric": "revenue",
+            "previous": 1407.9,
+            "current": 3890.13,
+            "change_pct": 176.3,
+            "direction": "up"
+          },
+          {
+            "pair": "Countdown / iOS / France",
+            "metric": "installs",
+            "previous": 658.0,
+            "current": 1797.0,
+            "change_pct": 173.1,
+            "direction": "up"
+          },
+          {
+            "pair": "Countdown / iOS / France",
+            "metric": "ua_cost",
+            "previous": 1044.15,
+            "current": 2753.19,
+            "change_pct": 163.7,
+            "direction": "up"
+          },
+          {
+            "pair": "News / iOS / UK",
+            "metric": "cpi",
+            "previous": 1.88,
+            "current": 4.1,
+            "change_pct": 118.0,
+            "direction": "up"
+          },
+          {
+            "pair": "News / iOS / UK",
+            "metric": "ua_cost",
+            "previous": 2116.32,
+            "current": 4584.79,
+            "change_pct": 116.6,
+            "direction": "up"
+          },
+          {
+            "pair": "News / iOS / UK",
+            "metric": "roas",
+            "previous": 1.43,
+            "current": 0.74,
+            "change_pct": -48.3,
+            "direction": "down"
+          },
+          {
+            "pair": "Paint / Android / Germany",
+            "metric": "roas",
+            "previous": 1.51,
+            "current": 0.93,
+            "change_pct": -38.5,
+            "direction": "down"
+          },
+          {
+            "pair": "Paint / Android / Germany",
+            "metric": "revenue",
+            "previous": 3208.61,
+            "current": 1988.23,
+            "change_pct": -38.0,
+            "direction": "down"
+          },
+          {
+            "pair": "Puzzle / iOS / USA",
+            "metric": "revenue",
+            "previous": 16788.9,
+            "current": 22801.76,
+            "change_pct": 35.8,
+            "direction": "up"
+          },
+          {
+            "pair": "Paint / Android / India",
+            "metric": "revenue",
+            "previous": 1687.96,
+            "current": 2195.94,
+            "change_pct": 30.1,
+            "direction": "up"
+          }
+        ]
+      },
+      "table": {
+        "columns": [
+          "app_name",
+          "platform",
+          "country",
+          "metric",
+          "previous",
+          "current",
+          "change_pct",
+          "direction"
+        ],
+        "rows": [
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "France",
+            "metric": "revenue",
+            "previous": 1407.9,
+            "current": 3890.13,
+            "change_pct": 176.3,
+            "direction": "up"
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "France",
+            "metric": "installs",
+            "previous": 658.0,
+            "current": 1797.0,
+            "change_pct": 173.1,
+            "direction": "up"
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "France",
+            "metric": "ua_cost",
+            "previous": 1044.15,
+            "current": 2753.19,
+            "change_pct": 163.7,
+            "direction": "up"
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "UK",
+            "metric": "cpi",
+            "previous": 1.8812,
+            "current": 4.1009,
+            "change_pct": 118.0,
+            "direction": "up"
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "UK",
+            "metric": "ua_cost",
+            "previous": 2116.32,
+            "current": 4584.79,
+            "change_pct": 116.6,
+            "direction": "up"
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "UK",
+            "metric": "roas",
+            "previous": 1.43,
+            "current": 0.7399,
+            "change_pct": -48.3,
+            "direction": "down"
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "Germany",
+            "metric": "roas",
+            "previous": 1.5114,
+            "current": 0.9298,
+            "change_pct": -38.5,
+            "direction": "down"
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "Germany",
+            "metric": "revenue",
+            "previous": 3208.61,
+            "current": 1988.23,
+            "change_pct": -38.0,
+            "direction": "down"
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "iOS",
+            "country": "USA",
+            "metric": "revenue",
+            "previous": 16788.9,
+            "current": 22801.76,
+            "change_pct": 35.8,
+            "direction": "up"
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "India",
+            "metric": "revenue",
+            "previous": 1687.96,
+            "current": 2195.94,
+            "change_pct": 30.1,
+            "direction": "up"
+          }
+        ],
+        "source": "anomaly_check"
+      },
+      "plan": {
+        "workflow": "anomaly_check",
+        "period": "custom",
+        "start": "2025-01-25",
+        "end": "2025-01-31",
+        "apps": null,
+        "platforms": null,
+        "countries": null,
+        "reason": "The user is asking for unusual changes in the last week, which fits the anomaly check workflow. No specific apps or regions were mentioned."
+      },
+      "tool_calls": [
+        {
+          "tool": "compute_kpis",
+          "ok": true,
+          "duration_ms": 19.91,
+          "error_code": null
+        },
+        {
+          "tool": "compute_kpis",
+          "ok": true,
+          "duration_ms": 15.53,
+          "error_code": null
+        },
+        {
+          "tool": "detect_anomalies",
+          "ok": true,
+          "duration_ms": 0.25,
+          "error_code": null
+        }
+      ],
+      "warnings": [],
+      "duration_ms": 11018.6
+    }
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "request": "Write me a poem about cats",
+    "result": {
+      "trace_id": "4d579519206742e4",
+      "session_id": "10c2012c25b7",
+      "workflow": null,
+      "status": "refused",
+      "summary": "I can only help with questions about the app portfolio metrics (installs, revenue, UA cost and KPIs such as ROAS and CPI), and I have read-only access to the data.",
+      "data": {},
+      "table": null,
+      "plan": {
+        "workflow": "refuse",
+        "period": "none",
+        "start": null,
+        "end": null,
+        "apps": null,
+        "platforms": null,
+        "countries": null,
+        "reason": "The request asks for creative writing unrelated to the app portfolio metrics."
+      },
+      "tool_calls": [],
+      "warnings": [],
+      "duration_ms": 2262.4
+    }
+  }
+]

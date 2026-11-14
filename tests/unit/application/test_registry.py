@@ -7,11 +7,13 @@ from typing import Any
 import pytest
 from pydantic import BaseModel, ConfigDict, Field
 
+from portfolio_agent.application.schemas import ToolError
 from portfolio_agent.application.tools.registry import (
     Tool,
     ToolCallError,
     ToolExecutionError,
     ToolRegistry,
+    _trace_tool_outputs,
 )
 
 
@@ -125,3 +127,19 @@ def test_every_call_is_logged(caplog: pytest.LogCaptureFixture) -> None:
         ("fail", False, "too_big"),
     ]
     assert [r.levelname for r in records] == ["INFO", "WARNING"]
+
+
+def test_llm_only_hides_graph_tools() -> None:
+    result = REGISTRY.call("fail", {"n": 1}, llm_only=True)
+    assert result.error is not None
+    assert result.error.code == "unknown_tool"
+    assert result.error.details["allowed"] == ["double"]
+
+
+def test_tool_trace_payload() -> None:
+    error = ToolError(code="too_big", message="n is too big")
+    assert _trace_tool_outputs((EchoOut(doubled=2), None)) == {
+        "output": {"doubled": 2},
+        "error": None,
+    }
+    assert _trace_tool_outputs((None, error))["error"]["code"] == "too_big"

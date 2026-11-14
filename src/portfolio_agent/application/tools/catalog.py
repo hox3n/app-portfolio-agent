@@ -22,13 +22,14 @@ def build_tool_registry(
     budget_config: BudgetRuleConfig,
     anomaly_config: AnomalyConfig,
     sql_row_limit: int,
+    max_sql_chars: int = 2000,
 ) -> ToolRegistry:
 
     dataset = lru_cache(maxsize=1)(repository.describe)
     return ToolRegistry(
         [
             make_get_schema_tool(dataset),
-            make_run_sql_tool(repository, sql_row_limit),
+            make_run_sql_tool(repository, sql_row_limit, max_sql_chars),
             make_fetch_metrics_tool(repository, dataset),
             make_compute_kpis_tool(repository, dataset),
             make_apply_budget_rules_tool(budget_config),

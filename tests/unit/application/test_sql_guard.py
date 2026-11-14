@@ -18,6 +18,8 @@ from portfolio_agent.infrastructure.db.duckdb_repository import DuckDBMetricsRep
         "SELECT * FROM (SELECT app_name, ua_cost FROM app_metrics) AS t WHERE ua_cost > 100",
         "SELECT DATE_TRUNC('month', date) AS m, ROUND(SUM(ua_cost), 2) FROM app_metrics GROUP BY m",
         "SELECT * FROM app_metrics;",
+        "SELECT app_name, SUM(in_app_revenue + ads_revenue) / SUM(installs) AS arpi "
+        "FROM app_metrics GROUP BY app_name",
     ],
 )
 def test_valid_queries_pass(sql: str) -> None:
@@ -51,6 +53,12 @@ def test_valid_queries_pass(sql: str) -> None:
         ("SELECT * FROM query('SELECT 1')", "function_not_allowed"),
         ("SELECT getenv('HOME')", "function_not_allowed"),
         ("SELECT app_name, read_text('/etc/hosts') FROM app_metrics", "function_not_allowed"),
+        (
+            "SELECT app_name, SUM((in_app_revenue + ads_revenue) / installs) FROM app_metrics "
+            "GROUP BY app_name",
+            "ratio_aggregation",
+        ),
+        ("SELECT AVG(ua_cost / installs) FROM app_metrics", "ratio_aggregation"),
     ],
 )
 def test_unsafe_queries_rejected(sql: str, code: str) -> None:

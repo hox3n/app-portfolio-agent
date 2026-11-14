@@ -5,6 +5,7 @@ from collections.abc import Callable
 from portfolio_agent.application.ports import MetricsRepository, RepositoryError
 from portfolio_agent.application.tools.contracts import MetricsOutput, MetricsQuery
 from portfolio_agent.application.tools.registry import Tool, ToolExecutionError
+from portfolio_agent.domain.kpis import totals_of
 from portfolio_agent.domain.models import DatasetInfo, MetricRow
 
 
@@ -45,13 +46,14 @@ def make_fetch_metrics_tool(
     def run(query: MetricsQuery) -> MetricsOutput:
         check_query(query, dataset())
 
-        return MetricsOutput(period=query.period, rows=fetch_rows(repository, query))
+        rows = fetch_rows(repository, query)
+        return MetricsOutput(period=query.period, rows=rows, totals=totals_of(rows))
 
     return Tool(
         name="fetch_metrics",
         description=(
             "Total installs, in-app revenue, ads revenue and UA cost per app/platform/country "
-            "for a period, with optional filters."
+            "for a period, with optional filters, plus totals over all returned rows."
         ),
         input_model=MetricsQuery,
         output_model=MetricsOutput,

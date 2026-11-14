@@ -1,0 +1,624 @@
+[
+  {
+    "request": "Review UA performance for January 2025",
+    "result": {
+      "trace_id": "d32ad293566b4f37",
+      "session_id": "2aff5b095c77",
+      "workflow": "budget_review",
+      "status": "ok",
+      "summary": "UA budget review for 2025-01-01 to 2025-01-31: 50 app/platform/country pairs, UA cost $1,006,289.18, revenue $1,254,513.38, profit $248,224.20, ROAS 1.25.\nRecommendation: cut 2, scale 10, maintain 38.\nCut: Countdown / Android / USA (ROAS 0.73, profit -$9,025.59); Puzzle / Android / India (ROAS 0.56, profit -$6,723.16).\nScale (largest): Fitness / iOS / USA (ROAS 2.16, profit $77,465.81); Fitness / Android / UK (ROAS 1.64, profit $16,061.20); Countdown / iOS / USA (ROAS 1.65, profit $15,478.38); Puzzle / iOS / UK (ROAS 1.60, profit $14,119.58); Puzzle / Android / UK (ROAS 1.52, profit $9,575.25).",
+      "data": {
+        "period": {
+          "start": "2025-01-01",
+          "end": "2025-01-31"
+        },
+        "pairs_reviewed": 50,
+        "counts": {
+          "cut": 2,
+          "scale": 10,
+          "maintain": 38
+        },
+        "total_ua_cost": 1006289.18,
+        "total_revenue": 1254513.38,
+        "total_profit": 248224.2,
+        "portfolio_roas": 1.25,
+        "top_cuts": [
+          {
+            "pair": "Countdown / Android / USA",
+            "roas": 0.73,
+            "ua_cost": 33433.24,
+            "profit": -9025.59,
+            "rule": "roas_below_cut_threshold"
+          },
+          {
+            "pair": "Puzzle / Android / India",
+            "roas": 0.56,
+            "ua_cost": 15378.94,
+            "profit": -6723.16,
+            "rule": "roas_below_cut_threshold"
+          }
+        ],
+        "top_scales": [
+          {
+            "pair": "Fitness / iOS / USA",
+            "roas": 2.16,
+            "ua_cost": 66597.41,
+            "profit": 77465.81,
+            "rule": "roas_above_scale_threshold"
+          },
+          {
+            "pair": "Fitness / Android / UK",
+            "roas": 1.64,
+            "ua_cost": 25186.06,
+            "profit": 16061.2,
+            "rule": "roas_above_scale_threshold"
+          },
+          {
+            "pair": "Countdown / iOS / USA",
+            "roas": 1.65,
+            "ua_cost": 23911.12,
+            "profit": 15478.38,
+            "rule": "roas_above_scale_threshold"
+          },
+          {
+            "pair": "Puzzle / iOS / UK",
+            "roas": 1.6,
+            "ua_cost": 23656.98,
+            "profit": 14119.58,
+            "rule": "roas_above_scale_threshold"
+          },
+          {
+            "pair": "Puzzle / Android / UK",
+            "roas": 1.52,
+            "ua_cost": 18471.11,
+            "profit": 9575.25,
+            "rule": "roas_above_scale_threshold"
+          }
+        ]
+      },
+      "table": {
+        "columns": [
+          "app_name",
+          "platform",
+          "country",
+          "action",
+          "rule",
+          "roas",
+          "ua_cost",
+          "profit"
+        ],
+        "rows": [
+          {
+            "app_name": "Countdown",
+            "platform": "Android",
+            "country": "USA",
+            "action": "cut",
+            "rule": "roas_below_cut_threshold",
+            "roas": 0.73,
+            "ua_cost": 33433.24,
+            "profit": -9025.59
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "Android",
+            "country": "India",
+            "action": "cut",
+            "rule": "roas_below_cut_threshold",
+            "roas": 0.5628,
+            "ua_cost": 15378.94,
+            "profit": -6723.16
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "iOS",
+            "country": "USA",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 2.1632,
+            "ua_cost": 66597.41,
+            "profit": 77465.81
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "Android",
+            "country": "UK",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.6377,
+            "ua_cost": 25186.06,
+            "profit": 16061.2
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "USA",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.6473,
+            "ua_cost": 23911.12,
+            "profit": 15478.38
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "iOS",
+            "country": "UK",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5968,
+            "ua_cost": 23656.98,
+            "profit": 14119.58
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "Android",
+            "country": "UK",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5184,
+            "ua_cost": 18471.11,
+            "profit": 9575.25
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "iOS",
+            "country": "France",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5124,
+            "ua_cost": 13950.48,
+            "profit": 7147.9
+          },
+          {
+            "app_name": "News",
+            "platform": "Android",
+            "country": "France",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5652,
+            "ua_cost": 9331.71,
+            "profit": 5273.83
+          },
+          {
+            "app_name": "News",
+            "platform": "Android",
+            "country": "India",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5268,
+            "ua_cost": 7608.92,
+            "profit": 4008.26
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "France",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5381,
+            "ua_cost": 7189.85,
+            "profit": 3868.99
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "India",
+            "action": "scale",
+            "rule": "roas_above_scale_threshold",
+            "roas": 1.5481,
+            "ua_cost": 5309.3,
+            "profit": 2910.12
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.3061,
+            "ua_cost": 60745.74,
+            "profit": 18594.95
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "Android",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.2062,
+            "ua_cost": 71088.2,
+            "profit": 14655.82
+          },
+          {
+            "app_name": "News",
+            "platform": "Android",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.1807,
+            "ua_cost": 39484.28,
+            "profit": 7133.19
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "iOS",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.4544,
+            "ua_cost": 15579.07,
+            "profit": 7078.45
+          },
+          {
+            "app_name": "News",
+            "platform": "Android",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.4983,
+            "ua_cost": 11615.83,
+            "profit": 5787.91
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "iOS",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0688,
+            "ua_cost": 83140.75,
+            "profit": 5717.87
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "iOS",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.3492,
+            "ua_cost": 15720.59,
+            "profit": 5489.93
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0955,
+            "ua_cost": 50652.1,
+            "profit": 4836.05
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "iOS",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.2958,
+            "ua_cost": 14884.99,
+            "profit": 4403.02
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "Android",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.2475,
+            "ua_cost": 16757.59,
+            "profit": 4147.4
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.387,
+            "ua_cost": 9285.93,
+            "profit": 3593.94
+          },
+          {
+            "app_name": "News",
+            "platform": "Android",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.3326,
+            "ua_cost": 9718.59,
+            "profit": 3232.01
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "Android",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0492,
+            "ua_cost": 65124.66,
+            "profit": 3201.79
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "Android",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.2078,
+            "ua_cost": 14326.27,
+            "profit": 2977.11
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.316,
+            "ua_cost": 9412.58,
+            "profit": 2974.23
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.3619,
+            "ua_cost": 7983.1,
+            "profit": 2888.92
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.2975,
+            "ua_cost": 9338.28,
+            "profit": 2778.32
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.4347,
+            "ua_cost": 6046.74,
+            "profit": 2628.4
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "USA",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.9446,
+            "ua_cost": 45059.23,
+            "profit": -2495.21
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "iOS",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0985,
+            "ua_cost": 19776.22,
+            "profit": 1948.68
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.1234,
+            "ua_cost": 11847.07,
+            "profit": 1461.88
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "iOS",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.141,
+            "ua_cost": 10084.87,
+            "profit": 1422.35
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "iOS",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.1474,
+            "ua_cost": 9539.33,
+            "profit": 1405.84
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "Android",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.9124,
+            "ua_cost": 15368.89,
+            "profit": -1346.96
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "iOS",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.2618,
+            "ua_cost": 5077.75,
+            "profit": 1329.23
+          },
+          {
+            "app_name": "Fitness",
+            "platform": "Android",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.9054,
+            "ua_cost": 12502.22,
+            "profit": -1182.67
+          },
+          {
+            "app_name": "Puzzle",
+            "platform": "Android",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0583,
+            "ua_cost": 18033.01,
+            "profit": 1050.79
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "Android",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.1311,
+            "ua_cost": 7508.95,
+            "profit": 984.43
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.1401,
+            "ua_cost": 6906.06,
+            "profit": 967.48
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.1322,
+            "ua_cost": 7243.07,
+            "profit": 957.46
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0793,
+            "ua_cost": 10440.23,
+            "profit": 827.92
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "France",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.9267,
+            "ua_cost": 9781.45,
+            "profit": -716.51
+          },
+          {
+            "app_name": "Paint",
+            "platform": "Android",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.9709,
+            "ua_cost": 19911.7,
+            "profit": -579.87
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "Android",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.944,
+            "ua_cost": 8265.89,
+            "profit": -463.22
+          },
+          {
+            "app_name": "News",
+            "platform": "iOS",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 0.926,
+            "ua_cost": 5568.44,
+            "profit": -411.94
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "Android",
+            "country": "UK",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0455,
+            "ua_cost": 8644.25,
+            "profit": 393.14
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "Germany",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0208,
+            "ua_cost": 9788.15,
+            "profit": 203.95
+          },
+          {
+            "app_name": "Countdown",
+            "platform": "Android",
+            "country": "India",
+            "action": "maintain",
+            "rule": "roas_within_target_range",
+            "roas": 1.0467,
+            "ua_cost": 4011.99,
+            "profit": 187.55
+          }
+        ],
+        "source": "budget_review"
+      },
+      "plan": {
+        "workflow": "budget_review",
+        "period": "custom",
+        "start": "2025-01-01",
+        "end": "2025-01-31",
+        "apps": null,
+        "platforms": null,
+        "countries": null,
+        "reason": "The user asked for a UA performance review, which fits the budget_review workflow. The period is explicitly named as January 2025."
+      },
+      "tool_calls": [
+        {
+          "tool": "compute_kpis",
+          "ok": true,
+          "duration_ms": 41.26,
+          "error_code": null
+        },
+        {
+          "tool": "apply_budget_rules",
+          "ok": true,
+          "duration_ms": 0.27,
+          "error_code": null
+        }
+      ],
+      "warnings": [
+        "summary_fallback: unsupported numbers ['37']"
+      ],
+      "duration_ms": 12564.5
+    }
+  }
+]

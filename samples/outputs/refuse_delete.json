@@ -1,0 +1,20 @@
+[
+  {
+    "request": "Delete all the data",
+    "result": {
+      "trace_id": "21f2e30e36874577",
+      "session_id": "1351443df019",
+      "workflow": null,
+      "status": "refused",
+      "summary": "I have read-only access to the metrics and can't change or delete data.",
+      "data": {},
+      "table": null,
+      "plan": null,
+      "tool_calls": [],
+      "warnings": [
+        "input_guard: write_request"
+      ],
+      "duration_ms": 1.6
+    }
+  }
+]

@@ -49,7 +49,8 @@ def test_llm_sees_only_query_tools(registry: ToolRegistry) -> None:
 def test_get_schema(registry: ToolRegistry) -> None:
     out = registry.call_typed("get_schema", {}, SchemaOutput)
     assert out.dataset.date_max == date(2025, 1, 31)
-    assert out.kpi_definitions["roas"] == "revenue / ua_cost"
+    assert out.kpi_definitions["roas"].startswith("revenue / ua_cost")
+    assert "revenue per install" in out.kpi_definitions["arpi"]
 
 
 def test_run_sql_applies_limit_and_reports_truncation(registry: ToolRegistry) -> None:
@@ -156,3 +157,28 @@ def test_export_csv_escapes_formulas(registry: ToolRegistry, tmp_path: Path) -> 
 def test_export_rejects_path_traversal(registry: ToolRegistry) -> None:
     args = {"columns": ["a"], "rows": [], "filename": "../../etc/passwd"}
     assert error_code(registry, "export_csv", args) == "invalid_input"
+
+
+def test_compute_kpis_grouped_by_country(registry: ToolRegistry) -> None:
+    args = {"start": "2024-01-01", "end": "2024-12-31", "countries": ["France", "Germany"]}
+    grouped = registry.call_typed("compute_kpis", {**args, "group_by": "country"}, KpisOutput)
+    per_pair = registry.call_typed("compute_kpis", args, KpisOutput)
+
+    assert grouped.kpis == []
+    assert grouped.groups is not None
+    assert [g.group for g in grouped.groups] == [{"country": "France"}, {"country": "Germany"}]
+    france = [k for k in per_pair.kpis if k.country == "France"]
+    assert grouped.groups[0].rows == len(france) == 10
+    assert grouped.groups[0].ua_cost == pytest.approx(sum(k.ua_cost for k in france), abs=0.05)
+    assert grouped.totals == per_pair.totals
+
+
+def test_group_by_rejects_unknown_dimension(registry: ToolRegistry) -> None:
+    assert error_code(registry, "compute_kpis", {**JANUARY, "group_by": ["month"]}) == (
+        "invalid_input"
+    )
+
+
+def test_group_by_spec_is_visible_to_the_llm(registry: ToolRegistry) -> None:
+    [spec] = [s for s in registry.llm_tool_specs() if s["function"]["name"] == "compute_kpis"]
+    assert "group_by" in spec["function"]["parameters"]["properties"]

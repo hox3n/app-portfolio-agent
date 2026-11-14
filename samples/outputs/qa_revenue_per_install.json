@@ -1,0 +1,102 @@
+[
+  {
+    "request": "Which app has the highest revenue per install?",
+    "result": {
+      "trace_id": "ac81bcf978bc4ab2",
+      "session_id": "c15c33ee4642",
+      "workflow": "qa",
+      "status": "ok",
+      "summary": "Fitness has the highest revenue per install at $1.725.",
+      "data": {
+        "tools_used": [
+          "compute_kpis"
+        ]
+      },
+      "table": {
+        "columns": [
+          "app",
+          "installs",
+          "ua_cost",
+          "revenue",
+          "profit",
+          "roas",
+          "cpi",
+          "arpi"
+        ],
+        "rows": [
+          {
+            "app": "Countdown",
+            "installs": 1147322,
+            "revenue": 1560240.91,
+            "ua_cost": 1376779.64,
+            "profit": 183461.27,
+            "roas": 1.1333,
+            "cpi": 1.2,
+            "arpi": 1.3599
+          },
+          {
+            "app": "Fitness",
+            "installs": 2694430,
+            "revenue": 4647838.43,
+            "ua_cost": 3278085.87,
+            "profit": 1369752.56,
+            "roas": 1.4179,
+            "cpi": 1.2166,
+            "arpi": 1.725
+          },
+          {
+            "app": "News",
+            "installs": 1558356,
+            "revenue": 2245209.85,
+            "ua_cost": 1888935.66,
+            "profit": 356274.19,
+            "roas": 1.1886,
+            "cpi": 1.2121,
+            "arpi": 1.4408
+          },
+          {
+            "app": "Paint",
+            "installs": 1929047,
+            "revenue": 2840088.95,
+            "ua_cost": 2389982.76,
+            "profit": 450106.19,
+            "roas": 1.1883,
+            "cpi": 1.2389,
+            "arpi": 1.4723
+          },
+          {
+            "app": "Puzzle",
+            "installs": 3130369,
+            "revenue": 4160160.9,
+            "ua_cost": 3554441.92,
+            "profit": 605718.98,
+            "roas": 1.1704,
+            "cpi": 1.1355,
+            "arpi": 1.329
+          }
+        ],
+        "source": "compute_kpis"
+      },
+      "plan": {
+        "workflow": "qa",
+        "period": "none",
+        "start": null,
+        "end": null,
+        "apps": null,
+        "platforms": null,
+        "countries": null,
+        "reason": ""
+      },
+      "tool_calls": [
+        {
+          "tool": "compute_kpis",
+          "ok": true,
+          "duration_ms": 35.44,
+          "error_code": null
+        }
+      ],
+      "warnings": [],
+      "duration_ms": 10619.7
+    }
+  }
+]

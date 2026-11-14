@@ -5,8 +5,13 @@ from typing import Any, cast
 import ollama
 import pytest
 
-from portfolio_agent.application.ports import ChatMessage, LLMError, ToolCall
-from portfolio_agent.infrastructure.llm.ollama_client import OllamaClient, to_ollama_message
+from portfolio_agent.application.ports import ChatMessage, LLMError, LLMResponse, ToolCall
+from portfolio_agent.infrastructure.llm.ollama_client import (
+    OllamaClient,
+    _trace_inputs,
+    _trace_outputs,
+    to_ollama_message,
+)
 
 HELLO = [ChatMessage(role="user", content="hi")]
 
@@ -74,3 +79,28 @@ def test_message_conversion() -> None:
     assert to_ollama_message(call_msg)["tool_calls"] == [
         {"function": {"name": "run_sql", "arguments": {"sql": "x"}}}
     ]
+
+
+def test_token_counts_are_returned() -> None:
+    response = reply("hi")
+    response.prompt_eval_count, response.eval_count = 120, 8
+    result = make(StubClient(response)).chat(HELLO)
+    assert (result.input_tokens, result.output_tokens) == (120, 8)
+
+
+def test_trace_payloads_are_readable() -> None:
+    inputs = _trace_inputs(
+        {
+            "self": object(),
+            "messages": HELLO,
+            "tools": [{"function": {"name": "run_sql"}}],
+            "response_schema": None,
+        }
+    )
+    assert inputs == {
+        "messages": [{"role": "user", "content": "hi"}],
+        "tools": ["run_sql"],
+        "structured_output": False,
+    }
+    outputs = _trace_outputs(LLMResponse(content="ok", input_tokens=10, output_tokens=2))
+    assert outputs["usage_metadata"] == {"input_tokens": 10, "output_tokens": 2, "total_tokens": 12}

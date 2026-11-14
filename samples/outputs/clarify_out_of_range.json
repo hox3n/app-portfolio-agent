@@ -1,0 +1,29 @@
+[
+  {
+    "request": "Review UA performance for January 2023",
+    "result": {
+      "trace_id": "c0d41b54c847407f",
+      "session_id": "0455fc3b4bed",
+      "workflow": null,
+      "status": "needs_clarification",
+      "summary": "I couldn't run that: data is only available from 2024-01-01 to 2025-01-31.",
+      "data": {},
+      "table": null,
+      "plan": {
+        "workflow": "budget_review",
+        "period": "custom",
+        "start": "2023-01-01",
+        "end": "2023-01-31",
+        "apps": null,
+        "platforms": null,
+        "countries": null,
+        "reason": "The user requested data for January 2023, which is outside the available dataset range of 2024-01-01 to 2025-01-31."
+      },
+      "tool_calls": [],
+      "warnings": [
+        "plan_rejected: data is only available from 2024-01-01 to 2025-01-31"
+      ],
+      "duration_ms": 5380.7
+    }
+  }
+]

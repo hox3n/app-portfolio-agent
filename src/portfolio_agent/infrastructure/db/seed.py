@@ -50,8 +50,8 @@ class Event:
 
 
 EVENTS = (
-    Event(("News", "iOS", "UK"), date(2025, 1, 20), "CPI spike x2.2", cpi=2.2),
-    Event(("Paint", "Android", "Germany"), date(2025, 1, 22), "in-app revenue drop", in_app=0.35),
+    Event(("News", "iOS", "UK"), date(2025, 1, 25), "CPI spike x2.2", cpi=2.2),
+    Event(("Paint", "Android", "Germany"), date(2025, 1, 25), "in-app revenue drop", in_app=0.35),
     Event(("Countdown", "iOS", "France"), date(2025, 1, 25), "install surge x2.5", installs=2.5),
 )
 
@@ -149,10 +149,11 @@ def write_database(rows: list[Row], db_path: Path) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate the sample app_metrics database.")
-    parser.add_argument("--db-path", type=Path, default=get_settings().db_path)
-    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
-    parser.add_argument("--start", type=date.fromisoformat, default=DEFAULT_START)
-    parser.add_argument("--end", type=date.fromisoformat, default=DEFAULT_END)
+    settings = get_settings()
+    parser.add_argument("--db-path", type=Path, default=settings.db_path)
+    parser.add_argument("--seed", type=int, default=settings.seed)
+    parser.add_argument("--start", type=date.fromisoformat, default=settings.seed_start)
+    parser.add_argument("--end", type=date.fromisoformat, default=settings.seed_end)
     args = parser.parse_args(argv)
 
     rows = generate_rows(args.seed, args.start, args.end)

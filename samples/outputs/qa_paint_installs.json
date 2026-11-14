@@ -1,0 +1,100 @@
+[
+  {
+    "request": "How many installs did Paint get on iOS in 2024?",
+    "result": {
+      "trace_id": "bb7f156310cc40c3",
+      "session_id": "d4e5cded2a0b",
+      "workflow": "qa",
+      "status": "ok",
+      "summary": "Paint got 756,830 installs on iOS in 2024 across all countries.",
+      "data": {
+        "tools_used": [
+          "fetch_metrics"
+        ]
+      },
+      "table": {
+        "columns": [
+          "app_name",
+          "platform",
+          "country",
+          "installs",
+          "in_app_revenue",
+          "ads_revenue",
+          "ua_cost"
+        ],
+        "rows": [
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "France",
+            "installs": 53122,
+            "in_app_revenue": 77010.9,
+            "ads_revenue": 51340.63,
+            "ua_cost": 82334.21
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "Germany",
+            "installs": 64162,
+            "in_app_revenue": 70616.21,
+            "ads_revenue": 47077.47,
+            "ua_cost": 111400.52
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "India",
+            "installs": 339339,
+            "in_app_revenue": 87686.72,
+            "ads_revenue": 58457.79,
+            "ua_cost": 108528.16
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "UK",
+            "installs": 61364,
+            "in_app_revenue": 71938.2,
+            "ads_revenue": 47958.77,
+            "ua_cost": 117651.39
+          },
+          {
+            "app_name": "Paint",
+            "platform": "iOS",
+            "country": "USA",
+            "installs": 238843,
+            "in_app_revenue": 383398.28,
+            "ads_revenue": 255599.03,
+            "ua_cost": 572497.72
+          }
+        ],
+        "source": "fetch_metrics"
+      },
+      "plan": {
+        "workflow": "qa",
+        "period": "none",
+        "start": null,
+        "end": null,
+        "apps": [
+          "Paint"
+        ],
+        "platforms": [
+          "iOS"
+        ],
+        "countries": null,
+        "reason": "The user is asking for a specific metric (installs) filtered by app, platform and year."
+      },
+      "tool_calls": [
+        {
+          "tool": "fetch_metrics",
+          "ok": true,
+          "duration_ms": 22.86,
+          "error_code": null
+        }
+      ],
+      "warnings": [],
+      "duration_ms": 11335.6
+    }
+  }
+]

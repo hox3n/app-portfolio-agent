@@ -7,6 +7,7 @@ from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any, Generic, TypeVar
 
+from langsmith import traceable
 from pydantic import BaseModel, ValidationError
 
 from portfolio_agent.application.observability import log_event
@@ -77,6 +78,16 @@ def _validation_details(error: ValidationError) -> dict[str, Any]:
     }
 
 
+def _trace_tool_outputs(outputs: Any) -> dict[str, Any]:
+    if not (isinstance(outputs, tuple) and len(outputs) == 2):
+        return {"output": outputs}
+    output, error = outputs
+    return {
+        "output": output.model_dump(mode="json") if isinstance(output, BaseModel) else None,
+        "error": error.model_dump() if isinstance(error, ToolError) else None,
+    }
+
+
 class ToolRegistry:
     def __init__(self, tools: Iterable[Tool[Any, Any]]) -> None:
         self._tools = {tool.name: tool for tool in tools}
@@ -100,11 +111,13 @@ class ToolRegistry:
             if tool.llm_exposed
         ]
 
-    def call(self, name: str, args: ToolArgs = None) -> ToolResult:
+    def call(self, name: str, args: ToolArgs = None, *, llm_only: bool = False) -> ToolResult:
 
         started = time.perf_counter()
         raw_args = _as_dict(args)
-        output, error = self._execute(name, raw_args)
+        output, error = self._traced_execute(
+            name, raw_args, llm_only, langsmith_extra={"name": f"tool:{name}"}
+        )
         result = ToolResult(
             tool=name,
             output=output,
@@ -138,16 +151,32 @@ class ToolRegistry:
 
         return result.output
 
+    @traceable(
+        run_type="tool",
+        name="tool",
+        process_inputs=lambda inputs: {
+            "tool": inputs.get("name"),
+            "args": inputs.get("raw_args"),
+            "llm_only": inputs.get("llm_only"),
+        },
+        process_outputs=lambda outputs: _trace_tool_outputs(outputs),
+    )
+    def _traced_execute(
+        self, name: str, raw_args: dict[str, Any], llm_only: bool
+    ) -> tuple[BaseModel | None, ToolError | None]:
+        return self._execute(name, raw_args, llm_only)
+
     def _execute(
-        self, name: str, raw_args: dict[str, Any]
+        self, name: str, raw_args: dict[str, Any], llm_only: bool
     ) -> tuple[BaseModel | None, ToolError | None]:
 
         tool = self._tools.get(name)
-        if tool is None:
+        if tool is None or (llm_only and not tool.llm_exposed):
+            allowed = [t.name for t in self._tools.values() if t.llm_exposed or not llm_only]
             return None, ToolError(
                 code="unknown_tool",
                 message=f"unknown tool '{name}'",
-                details={"allowed": self.names},
+                details={"allowed": sorted(allowed)},
             )
 
         try:

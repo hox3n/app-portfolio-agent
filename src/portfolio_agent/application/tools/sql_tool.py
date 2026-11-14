@@ -7,13 +7,13 @@ from portfolio_agent.application.tools.registry import Tool, ToolExecutionError
 
 
 def make_run_sql_tool(
-    repository: MetricsRepository, max_rows: int
+    repository: MetricsRepository, max_rows: int, max_sql_chars: int = 2000
 ) -> Tool[RunSqlInput, RunSqlOutput]:
 
     def run(inp: RunSqlInput) -> RunSqlOutput:
         try:
             # One extra row lets us tell the caller the result was truncated.
-            safe_sql = validate_select(inp.sql, max_rows + 1)
+            safe_sql = validate_select(inp.sql, max_rows + 1, max_chars=max_sql_chars)
         except SqlGuardError as e:
             raise ToolExecutionError(e.code, str(e)) from e
         try:
@@ -32,7 +32,8 @@ def make_run_sql_tool(
         name="run_sql",
         description=(
             "Run one read-only SELECT on the app_metrics table (DuckDB SQL). "
-            f"At most {max_rows} rows are returned. Use for questions compute_kpis can't answer."
+            f"At most {max_rows} rows are returned. Not for KPIs (ROAS, CPI, ARPI, revenue or cost "
+            "per install): use compute_kpis. Use for breakdowns by day or month."
         ),
         input_model=RunSqlInput,
         output_model=RunSqlOutput,

@@ -90,14 +90,17 @@ def _apply_limit(tree: exp.Query, max_rows: int) -> exp.Query:
 
 
 def validate_select(
-    sql: str, max_rows: int, allowed_tables: frozenset[str] = ALLOWED_TABLES
+    sql: str,
+    max_rows: int,
+    allowed_tables: frozenset[str] = ALLOWED_TABLES,
+    max_chars: int = MAX_SQL_CHARS,
 ) -> str:
 
     if not sql.strip():
         raise SqlGuardError("empty_sql", "SQL is empty")
 
-    if len(sql) > MAX_SQL_CHARS:
-        raise SqlGuardError("sql_too_long", f"SQL is longer than {MAX_SQL_CHARS} characters")
+    if len(sql) > max_chars:
+        raise SqlGuardError("sql_too_long", f"SQL is longer than {max_chars} characters")
 
     try:
         statements = [s for s in sqlglot.parse(sql, read="duckdb") if s is not None]
@@ -120,6 +123,15 @@ def validate_select(
         ):
             raise SqlGuardError(
                 "function_not_allowed", f"function {_function_name(node)}() is not allowed"
+            )
+
+    for aggregate in tree.find_all(exp.Sum, exp.Avg):
+        if aggregate.find(exp.Div):
+            raise SqlGuardError(
+                "ratio_aggregation",
+                "do not SUM or AVG a ratio; divide the totals instead, e.g. "
+                "SUM(in_app_revenue + ads_revenue) / SUM(installs), or use compute_kpis "
+                "for ROAS, CPI and ARPI",
             )
 
     _check_tables(tree, allowed_tables)

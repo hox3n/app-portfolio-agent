@@ -35,6 +35,7 @@ def main() -> None:
         settings.ollama_model,
         settings.ollama_base_url,
         think=settings.ollama_think,
+        temperature=settings.llm_temperature,
         timeout_s=settings.llm_timeout_s,
     )
     system = ChatMessage(
@@ -53,6 +54,7 @@ def main() -> None:
         budget_config=BudgetRuleConfig(),
         anomaly_config=AnomalyConfig(),
         sql_row_limit=settings.sql_row_limit,
+        max_sql_chars=settings.max_sql_chars,
     )
     question = "What was the ROAS of Puzzle on Android in India in January 2025?"
     response = llm.chat(

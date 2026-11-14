@@ -1,0 +1,72 @@
+[
+  {
+    "request": "What was the ROAS of Puzzle on Android in India in January 2025?",
+    "result": {
+      "trace_id": "96167fcad6ee4ca9",
+      "session_id": "b43668ae4a1e",
+      "workflow": "qa",
+      "status": "ok",
+      "summary": "The ROAS of Puzzle on Android in India for January 2025 was $0.56.",
+      "data": {
+        "tools_used": [
+          "compute_kpis"
+        ]
+      },
+      "table": {
+        "columns": [
+          "app_name",
+          "platform",
+          "country",
+          "installs",
+          "ua_cost",
+          "revenue",
+          "profit",
+          "roas",
+          "cpi",
+          "arpi"
+        ],
+        "rows": [
+          {
+            "app_name": "Puzzle",
+            "platform": "Android",
+            "country": "India",
+            "installs": 62569,
+            "ua_cost": 15378.94,
+            "revenue": 8655.78,
+            "profit": -6723.16,
+            "roas": 0.5628,
+            "cpi": 0.2458,
+            "arpi": 0.1383
+          }
+        ],
+        "source": "compute_kpis"
+      },
+      "plan": {
+        "workflow": "qa",
+        "period": "custom",
+        "start": "2025-01-01",
+        "end": "2025-01-31",
+        "apps": [
+          "Puzzle"
+        ],
+        "platforms": [
+          "Android"
+        ],
+        "countries": [
+          "India"
+        ],
+        "reason": ""
+      },
+      "tool_calls": [
+        {
+          "tool": "compute_kpis",
+          "ok": true,
+          "duration_ms": 22.3,
+          "error_code": null
+        }
+      ],
+      "warnings": [],
+      "duration_ms": 11587.6
+    }
+  }
+]

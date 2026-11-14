@@ -1,6 +1,6 @@
 """Entities and value objects: Period, MetricRow, KpiRow, Decision, Anomaly."""
 
-from datetime import date
+from datetime import date, timedelta
 from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -15,6 +15,7 @@ Rule = Literal[
     "no_spend",
 ]
 KpiMetric = Literal["installs", "ua_cost", "revenue", "profit", "roas", "cpi", "arpi"]
+GroupDimension = Literal["app", "platform", "country"]
 
 
 class Period(BaseModel):
@@ -31,6 +32,10 @@ class Period(BaseModel):
     @property
     def days(self) -> int:
         return (self.end - self.start).days + 1
+
+    def previous(self) -> "Period":
+        length = timedelta(days=self.days)
+        return Period(start=self.start - length, end=self.end - length)
 
 
 class MetricRow(BaseModel):
@@ -82,6 +87,7 @@ class Decision(BaseModel):
     action: Action
     rule: Rule
     roas: float | None = None
+    ua_cost: float = Field(ge=0)
     profit: float
 
 
@@ -95,3 +101,21 @@ class Anomaly(BaseModel):
     current: float
     change_pct: float
     direction: Literal["up", "down"]
+
+
+class Totals(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    rows: int = Field(ge=0)
+    installs: int = Field(ge=0)
+    in_app_revenue: float = Field(ge=0)
+    ads_revenue: float = Field(ge=0)
+    revenue: float = Field(ge=0)
+    ua_cost: float = Field(ge=0)
+    profit: float
+    roas: float | None = None
+    cpi: float | None = None
+    arpi: float | None = None
+
+
+class GroupTotals(Totals):
+    group: dict[str, str]

@@ -1,9 +1,0 @@
-duckdb
-langchain-core
-langchain-ollama
-langgraph
-langsmith
-python-dotenv
-slack-bolt
-typing_extensions
-faker

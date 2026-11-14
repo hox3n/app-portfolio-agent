@@ -1,6 +1,7 @@
 """export_csv tool: writes a result table to a CSV file."""
 
 from datetime import UTC, datetime
+from pathlib import Path
 
 from portfolio_agent.application.observability import current_trace_id
 from portfolio_agent.application.ports import Exporter
@@ -18,7 +19,8 @@ def make_export_csv_tool(exporter: Exporter) -> Tool[ExportInput, ExportResult]:
             path = exporter.export_csv(inp.columns, inp.rows, name)
         except (OSError, ValueError) as e:
             raise ToolExecutionError("export_failed", str(e)) from e
-        return ExportResult(path=str(path), row_count=len(inp.rows))
+        shown = path.relative_to(Path.cwd()) if path.is_relative_to(Path.cwd()) else path
+        return ExportResult(path=str(shown), row_count=len(inp.rows))
 
     return Tool(
         name="export_csv",

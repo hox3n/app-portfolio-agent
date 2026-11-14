@@ -1,0 +1,72 @@
+[
+  {
+    "request": "Make a report comparing profit and ROAS between France and Germany in 2024",
+    "result": {
+      "trace_id": "b0ddf6181bbd43ab",
+      "session_id": "5b63c7eb52c3",
+      "workflow": "qa",
+      "status": "ok",
+      "summary": "In 2024, Germany generated $351,179 in profit with a ROAS of 1.27x, while France earned $248,592 and achieved a lower ROAS of 1.21x.",
+      "data": {
+        "tools_used": [
+          "compute_kpis"
+        ]
+      },
+      "table": {
+        "columns": [
+          "country",
+          "installs",
+          "ua_cost",
+          "revenue",
+          "profit",
+          "roas",
+          "cpi",
+          "arpi"
+        ],
+        "rows": [
+          {
+            "country": "France",
+            "installs": 883308,
+            "revenue": 1415913.08,
+            "ua_cost": 1167320.67,
+            "profit": 248592.41,
+            "roas": 1.213,
+            "cpi": 1.3215,
+            "arpi": 1.603
+          },
+          {
+            "country": "Germany",
+            "installs": 858463,
+            "revenue": 1633651.45,
+            "ua_cost": 1282471.96,
+            "profit": 351179.49,
+            "roas": 1.2738,
+            "cpi": 1.4939,
+            "arpi": 1.903
+          }
+        ],
+        "source": "compute_kpis"
+      },
+      "plan": {
+        "workflow": "qa",
+        "period": "none",
+        "start": null,
+        "end": null,
+        "apps": null,
+        "platforms": null,
+        "countries": null,
+        "reason": "The user is asking for specific metric comparisons (profit, ROAS) across two countries over the entire year of 2024."
+      },
+      "tool_calls": [
+        {
+          "tool": "compute_kpis",
+          "ok": true,
+          "duration_ms": 28.59,
+          "error_code": null
+        }
+      ],
+      "warnings": [],
+      "duration_ms": 12008.1
+    }
+  }
+]

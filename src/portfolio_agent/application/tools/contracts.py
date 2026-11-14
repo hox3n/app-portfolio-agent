@@ -1,5 +1,6 @@
 """Pydantic input/output models for every tool."""
 
+import json
 import math
 from datetime import date
 from typing import Any, Self
@@ -11,11 +12,26 @@ from portfolio_agent.domain.models import (
     Anomaly,
     DatasetInfo,
     Decision,
+    GroupDimension,
+    GroupTotals,
     KpiRow,
     MetricRow,
     Period,
     Platform,
+    Totals,
 )
+
+
+def as_list(value: Any) -> Any:
+    if isinstance(value, str):
+        text = value.strip()
+        if text.startswith("["):
+            try:
+                return json.loads(text)
+            except json.JSONDecodeError:
+                pass
+        return [text]
+    return value
 
 
 class ToolInput(BaseModel):
@@ -34,7 +50,7 @@ class SchemaOutput(BaseModel):
 class RunSqlInput(ToolInput):
     sql: str = Field(
         min_length=1,
-        max_length=2000,
+        max_length=20_000,
         description="One read-only SELECT over the app_metrics table, DuckDB dialect.",
     )
 
@@ -67,7 +83,7 @@ class MetricsQuery(ToolInput):
     @field_validator("apps", "platforms", "countries", mode="before")
     @classmethod
     def _wrap_single_value(cls, value: Any) -> Any:
-        return [value] if isinstance(value, str) else value
+        return as_list(value)
 
     @model_validator(mode="after")
     def _check_order(self) -> Self:
@@ -80,21 +96,42 @@ class MetricsQuery(ToolInput):
         return Period(start=self.start, end=self.end)
 
 
+class KpiQuery(MetricsQuery):
+    group_by: list[GroupDimension] | None = Field(
+        default=None,
+        description="Sum the KPIs per app, platform and/or country instead of per "
+        'app/platform/country pair, for example ["country"]. Use it for comparisons and '
+        "breakdowns.",
+    )
+
+    @field_validator("group_by", mode="before")
+    @classmethod
+    def _wrap_group_by(cls, value: Any) -> Any:
+        listed = as_list(value)
+        if isinstance(listed, list):
+            return list(dict.fromkeys(str(v).lower() for v in listed)) or None
+        return listed
+
+
 class MetricsOutput(BaseModel):
     period: Period
     rows: list[MetricRow]
+    totals: Totals
 
 
 class KpisOutput(BaseModel):
     period: Period
     kpis: list[KpiRow]
+    totals: Totals
+    groups: list[GroupTotals] | None = None
 
     @model_validator(mode="after")
     def _check_finite(self) -> Self:
-        for kpi in self.kpis:
-            values = (kpi.ua_cost, kpi.revenue, kpi.profit, kpi.roas, kpi.cpi, kpi.arpi)
+        rows: list[KpiRow | Totals] = [*self.kpis, self.totals, *(self.groups or [])]
+        for row in rows:
+            values = (row.ua_cost, row.revenue, row.profit, row.roas, row.cpi, row.arpi)
             if any(v is not None and not math.isfinite(v) for v in values):
-                raise ValueError(f"non-finite KPI value for {kpi.pair}")
+                raise ValueError(f"non-finite KPI value in {row}")
         return self
 
 

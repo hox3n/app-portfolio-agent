@@ -9,9 +9,9 @@ from portfolio_agent.domain.models import DatasetInfo
 KPI_DEFINITIONS = {
     "revenue": "in_app_revenue + ads_revenue",
     "profit": "revenue - ua_cost",
-    "roas": "revenue / ua_cost",
-    "cpi": "ua_cost / installs",
-    "arpi": "revenue / installs",
+    "roas": "revenue / ua_cost (return on ad spend)",
+    "cpi": "ua_cost / installs (cost per install)",
+    "arpi": "revenue / installs (revenue per install)",
 }
 
 

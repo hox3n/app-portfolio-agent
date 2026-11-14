@@ -6,6 +6,7 @@ from typing import Any, Literal, Protocol
 
 from pydantic import BaseModel, Field
 
+from portfolio_agent.application.schemas import Session
 from portfolio_agent.domain.models import DatasetInfo, MetricRow, Period
 
 
@@ -59,6 +60,8 @@ class ChatMessage(BaseModel):
 class LLMResponse(BaseModel):
     content: str = ""
     tool_calls: list[ToolCall] = Field(default_factory=list)
+    input_tokens: int | None = None
+    output_tokens: int | None = None
 
 
 class LLMClient(Protocol):
@@ -69,3 +72,9 @@ class LLMClient(Protocol):
         tools: Sequence[dict[str, Any]] | None = None,
         response_schema: dict[str, Any] | None = None,
     ) -> LLMResponse: ...
+
+
+class SessionStore(Protocol):
+    def get(self, session_id: str) -> Session: ...
+
+    def save(self, session_id: str, session: Session) -> None: ...

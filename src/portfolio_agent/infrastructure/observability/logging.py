@@ -14,23 +14,29 @@ REDACT_KEY = re.compile(r"(^|_)(token|secret|password|api_key)$")
 MAX_VALUE_CHARS = 500
 
 
-def _clean(key: str, value: Any) -> Any:
+def _clean(key: str, value: Any, max_chars: int) -> Any:
 
     if REDACT_KEY.search(key.lower()):
         return "***"
 
-    if isinstance(value, str) and len(value) > MAX_VALUE_CHARS:
-        return value[:MAX_VALUE_CHARS] + "…"
+    if isinstance(value, str) and len(value) > max_chars:
+        return value[:max_chars] + "…"
 
     return value
 
 
-def _fields(record: logging.LogRecord) -> dict[str, Any]:
+def _fields(record: logging.LogRecord, max_chars: int) -> dict[str, Any]:
     fields: dict[str, Any] = getattr(record, "fields", {})
-    return {key: _clean(key, value) for key, value in fields.items()}
+    return {key: _clean(key, value, max_chars) for key, value in fields.items()}
 
 
-class JsonFormatter(logging.Formatter):
+class _Formatter(logging.Formatter):
+    def __init__(self, max_value_chars: int = MAX_VALUE_CHARS) -> None:
+        super().__init__()
+        self.max_value_chars = max_value_chars
+
+
+class JsonFormatter(_Formatter):
     def format(self, record: logging.LogRecord) -> str:
 
         payload: dict[str, Any] = {
@@ -39,7 +45,7 @@ class JsonFormatter(logging.Formatter):
             "logger": record.name,
             "event": record.getMessage(),
             "trace_id": current_trace_id(),
-            **_fields(record),
+            **_fields(record, self.max_value_chars),
         }
 
         if record.exc_info:
@@ -48,12 +54,14 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(payload, default=str, ensure_ascii=False)
 
 
-class TextFormatter(logging.Formatter):
+class TextFormatter(_Formatter):
     def format(self, record: logging.LogRecord) -> str:
 
         time = datetime.fromtimestamp(record.created).strftime("%H:%M:%S")
         trace = (current_trace_id() or "-")[:8]
-        fields = " ".join(f"{key}={value}" for key, value in _fields(record).items())
+        fields = " ".join(
+            f"{key}={value}" for key, value in _fields(record, self.max_value_chars).items()
+        )
         line = f"{time} {record.levelname:<7} [{trace}] {record.getMessage()} {fields}".rstrip()
 
         if record.exc_info:
@@ -62,11 +70,15 @@ class TextFormatter(logging.Formatter):
 
 
 def configure_logging(
-    level: str = "INFO", fmt: Literal["json", "text"] = "json", stream: TextIO | None = None
+    level: str = "INFO",
+    fmt: Literal["json", "text"] = "json",
+    stream: TextIO | None = None,
+    max_value_chars: int = MAX_VALUE_CHARS,
 ) -> None:
 
     handler = logging.StreamHandler(stream or sys.stderr)
-    handler.setFormatter(JsonFormatter() if fmt == "json" else TextFormatter())
+    formatter = JsonFormatter if fmt == "json" else TextFormatter
+    handler.setFormatter(formatter(max_value_chars))
     logger = logging.getLogger(ROOT_LOGGER)
     logger.handlers = [handler]
     logger.setLevel(level)

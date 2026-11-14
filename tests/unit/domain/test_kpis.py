@@ -1,10 +1,12 @@
 """Tests for KPI formulas."""
 
+from datetime import date
+
 import pytest
 from pydantic import ValidationError
 
-from portfolio_agent.domain.kpis import compute_all, compute_kpis
-from portfolio_agent.domain.models import MetricRow
+from portfolio_agent.domain.kpis import compute_all, compute_kpis, group_totals, totals_of
+from portfolio_agent.domain.models import MetricRow, Period
 
 
 def metric(
@@ -48,3 +50,61 @@ def test_compute_all_keeps_order() -> None:
 def test_negative_values_rejected() -> None:
     with pytest.raises(ValidationError):
         metric(cost=-1.0)
+
+
+def test_totals_over_rows() -> None:
+    totals = totals_of([metric(), metric(installs=0, cost=200.0)])
+    assert (totals.rows, totals.installs, totals.revenue, totals.ua_cost) == (
+        2,
+        1000,
+        2000.0,
+        1000.0,
+    )
+    assert (totals.profit, totals.roas, totals.cpi) == (1000.0, 2.0, 1.0)
+
+
+def test_totals_of_nothing() -> None:
+    totals = totals_of([])
+    assert (totals.rows, totals.roas, totals.cpi) == (0, None, None)
+
+
+def test_previous_period_has_same_length() -> None:
+    week = Period(start=date(2025, 1, 25), end=date(2025, 1, 31))
+    assert week.previous() == Period(start=date(2025, 1, 18), end=date(2025, 1, 24))
+
+
+def grouped_metric(country: str, platform: str, cost: float) -> MetricRow:
+    return MetricRow(
+        app_name="Puzzle",
+        platform=platform,
+        country=country,
+        installs=100,
+        in_app_revenue=cost,
+        ads_revenue=0.0,
+        ua_cost=cost,
+    )
+
+
+def test_group_totals_by_country() -> None:
+    rows = [
+        grouped_metric("UK", "iOS", 100.0),
+        grouped_metric("France", "iOS", 50.0),
+        grouped_metric("UK", "Android", 300.0),
+    ]
+    groups = group_totals(rows, ["country"])
+    assert [g.group for g in groups] == [{"country": "France"}, {"country": "UK"}]
+    assert (groups[1].rows, groups[1].installs, groups[1].ua_cost) == (2, 200, 400.0)
+    assert groups[1].roas == 1.0
+
+
+def test_group_totals_by_two_dimensions() -> None:
+    rows = [grouped_metric("UK", "iOS", 1.0), grouped_metric("UK", "Android", 1.0)]
+    groups = group_totals(rows, ["country", "platform"])
+    assert [g.group for g in groups] == [
+        {"country": "UK", "platform": "Android"},
+        {"country": "UK", "platform": "iOS"},
+    ]
+
+
+def test_group_totals_of_nothing() -> None:
+    assert group_totals([], ["app"]) == []
