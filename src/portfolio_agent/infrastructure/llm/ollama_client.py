@@ -1,0 +1,1 @@
+"""LLMClient for local Ollama."""

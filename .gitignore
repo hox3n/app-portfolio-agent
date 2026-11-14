@@ -1,0 +1,31 @@
+# Secrets
+.env
+
+# Generated data and outputs
+data/*
+!data/.gitkeep
+exports/*
+!exports/.gitkeep
+*.db
+*.duckdb
+*.wal
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS / editor
+.DS_Store
+.idea/

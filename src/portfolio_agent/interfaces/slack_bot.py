@@ -1,0 +1,1 @@
+"""Optional Slack adapter."""

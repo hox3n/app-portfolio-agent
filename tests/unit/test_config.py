@@ -1,0 +1,50 @@
+"""Tests for settings: defaults, environment overrides, validation."""
+
+from pathlib import Path
+
+import pytest
+from pydantic import ValidationError
+
+from portfolio_agent.config import Settings
+
+
+@pytest.fixture(autouse=True)
+def _isolate_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.chdir(tmp_path)
+    for var in ("AGENT_OLLAMA_MODEL", "AGENT_MAX_TOOL_STEPS", "AGENT_OLLAMA_THINK"):
+        monkeypatch.delenv(var, raising=False)
+
+
+def test_defaults() -> None:
+    s = Settings()
+    assert s.ollama_model == "qwen3.5:4b"
+    assert s.ollama_think is False
+    assert s.llm_provider == "ollama"
+    assert s.max_tool_steps == 6
+
+
+def test_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AGENT_OLLAMA_MODEL", "gemma4:12b")
+    monkeypatch.setenv("AGENT_MAX_TOOL_STEPS", "3")
+    s = Settings()
+    assert s.ollama_model == "gemma4:12b"
+    assert s.max_tool_steps == 3
+
+
+def test_dotenv_file_is_read(tmp_path: Path) -> None:
+    (tmp_path / ".env").write_text("AGENT_OLLAMA_THINK=true\n")
+    assert Settings().ollama_think is True
+
+
+def test_invalid_value_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AGENT_MAX_TOOL_STEPS", "0")
+    with pytest.raises(ValidationError):
+        Settings()
+
+
+def test_secrets_are_masked(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SLACK_BOT_TOKEN", "xoxb-secret")
+    s = Settings()
+    assert s.slack_bot_token is not None
+    assert "xoxb-secret" not in repr(s)
+    assert s.slack_bot_token.get_secret_value() == "xoxb-secret"
