@@ -1,5 +1,7 @@
 # App Portfolio Analytics Agent
 
+[![CI](https://github.com/hox3n/app-portfolio-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/hox3n/app-portfolio-agent/actions/workflows/ci.yml)
+
 An AI agent that lets a mobile app publisher's growth team ask questions about their app portfolio in plain English and get **UA (user acquisition) budget recommendations** they can trust. Every number in an answer comes from the data, every step is logged, and the agent never changes data or spends money.
 
 It runs fully locally: **LangGraph** for orchestration, **Ollama** (`qwen3.5:4b`) as the LLM, and **DuckDB** as the data store.
@@ -186,12 +188,14 @@ The detailed design (state, contracts, prompts, sequence diagrams) is in [docs/A
   ```bash
   ollama pull qwen3.5:4b
   ```
-- `make`. Tested on macOS (Apple M1 Pro, 16 GB RAM); each request takes ~10–15 s there.
+- `make` (preinstalled on macOS and most Linux distributions; for Windows see [below](#windows)).
+
+The agent was run on macOS (Apple M1 Pro, 16 GB RAM), where each request takes ~10–15 s; on a machine without a GPU expect it to be slower. The test suite runs in CI on Ubuntu, macOS and Windows with Python 3.11 and 3.13.
 
 ### Install and run
 
 ```bash
-git clone <repo-url> && cd app-portfolio-agent
+git clone https://github.com/hox3n/app-portfolio-agent.git && cd app-portfolio-agent
 make setup     # creates .venv, installs the project + dev tools, copies .env.example to .env
 make seed      # generates the sample DuckDB database (deterministic: checksum 6eb8df3dfe8d)
 
@@ -208,6 +212,22 @@ Run the CLI directly for options:
 ```
 
 `make help` lists every command.
+
+### Windows
+
+The Python code is cross-platform, but the Makefile uses Unix commands and paths. Two options:
+
+- **WSL2 (recommended):** run everything inside Ubuntu on WSL exactly as above. Ollama can run inside WSL or as the Windows app (the default `AGENT_OLLAMA_BASE_URL=http://localhost:11434` reaches either).
+- **PowerShell, without make:**
+  ```powershell
+  py -3.11 -m venv .venv
+  .venv\Scripts\pip install -e ".[dev]"
+  copy .env.example .env
+  .venv\Scripts\python -m portfolio_agent.infrastructure.db.seed
+  .venv\Scripts\pytest
+  .venv\Scripts\portfolio-agent "Review UA performance for January 2025"
+  .venv\Scripts\portfolio-agent        # chat session
+  ```
 
 ### Configuration
 
@@ -237,10 +257,12 @@ Every setting lives in `.env` (template: [.env.example](.env.example)); values a
 ## 6. How to test and verify
 
 ```bash
-make test      # 245 tests: unit + end-to-end graph tests (no Ollama needed, ~3 s)
+make test      # 246 tests: unit + end-to-end graph tests (no Ollama needed, ~3 s)
 make lint      # ruff (style), ruff format, mypy --strict
 make samples   # 14 sample turns against the real local model, checked against expected outcomes
 ```
+
+**Continuous integration:** [.github/workflows/ci.yml](.github/workflows/ci.yml) runs the lint checks and the full test suite on every push and pull request, on Ubuntu, macOS and Windows with Python 3.11 and 3.13 (6 test jobs). The tests need no Ollama, so CI is fully deterministic.
 
 ### Automated tests (`make test`)
 
@@ -478,6 +500,7 @@ src/portfolio_agent/
 └── config.py          # settings from .env
 tests/unit/            # domain, application, infrastructure, interfaces
 tests/integration/     # full agent graph with a scripted LLM
+.github/workflows/     # CI: lint + tests on Ubuntu, macOS, Windows
 samples/               # sample requests with expected outcomes + saved outputs
 scripts/               # run_samples.py (make samples)
 docs/                  # ARCHITECTURE.md (detailed design)
