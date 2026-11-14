@@ -80,3 +80,11 @@ def test_rounding_and_truncation_both_accepted() -> None:
     facts = {"profit": 379754.68}
     assert unsupported_numbers("$379,754 or $379,755", facts) == []
     assert unsupported_numbers("$379,753", facts) == ["$379,753"]
+
+
+def test_scale_words_are_understood() -> None:
+    facts = {"india": 4124883, "usa": 3253167, "revenue": 8241412.23}
+    text = "India has 4 million installs, the USA 3.25 million, revenue $8.2M or 8.24 mn."
+    assert unsupported_numbers(text, facts) == []
+    assert unsupported_numbers("India has 5 million installs.", facts) == ["5 million"]
+    assert unsupported_numbers("Revenue was 8 billion.", facts) == ["8 billion"]

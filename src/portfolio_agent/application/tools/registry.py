@@ -54,13 +54,6 @@ class ToolResult:
         return self.output.model_dump_json() if self.output is not None else "{}"
 
 
-class ToolCallError(Exception):
-    def __init__(self, result: ToolResult) -> None:
-        message = result.error.message if result.error else "unknown error"
-        super().__init__(f"{result.tool} failed: {message}")
-        self.result = result
-
-
 def _as_dict(args: ToolArgs) -> dict[str, Any]:
 
     if isinstance(args, BaseModel):
@@ -139,17 +132,6 @@ class ToolRegistry:
         )
 
         return result
-
-    def call_typed(self, name: str, args: ToolArgs, output_type: type[OutputT]) -> OutputT:
-
-        result = self.call(name, args)
-        if not result.ok:
-            raise ToolCallError(result)
-
-        if not isinstance(result.output, output_type):
-            raise TypeError(f"{name} returned {type(result.output).__name__}")
-
-        return result.output
 
     @traceable(
         run_type="tool",

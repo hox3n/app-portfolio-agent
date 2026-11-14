@@ -2,8 +2,8 @@
   {
     "request": "Review UA performance for January 2025",
     "result": {
-      "trace_id": "d32ad293566b4f37",
-      "session_id": "2aff5b095c77",
+      "trace_id": "2ecee2d97d6342a9",
+      "session_id": "81905db1ef8d",
       "workflow": "budget_review",
       "status": "ok",
       "summary": "UA budget review for 2025-01-01 to 2025-01-31: 50 app/platform/country pairs, UA cost $1,006,289.18, revenue $1,254,513.38, profit $248,224.20, ROAS 1.25.\nRecommendation: cut 2, scale 10, maintain 38.\nCut: Countdown / Android / USA (ROAS 0.73, profit -$9,025.59); Puzzle / Android / India (ROAS 0.56, profit -$6,723.16).\nScale (largest): Fitness / iOS / USA (ROAS 2.16, profit $77,465.81); Fitness / Android / UK (ROAS 1.64, profit $16,061.20); Countdown / iOS / USA (ROAS 1.65, profit $15,478.38); Puzzle / iOS / UK (ROAS 1.60, profit $14,119.58); Puzzle / Android / UK (ROAS 1.52, profit $9,575.25).",
@@ -605,20 +605,20 @@
         {
           "tool": "compute_kpis",
           "ok": true,
-          "duration_ms": 41.26,
+          "duration_ms": 47.83,
           "error_code": null
         },
         {
           "tool": "apply_budget_rules",
           "ok": true,
-          "duration_ms": 0.27,
+          "duration_ms": 0.87,
           "error_code": null
         }
       ],
       "warnings": [
         "summary_fallback: unsupported numbers ['37']"
       ],
-      "duration_ms": 12564.5
+      "duration_ms": 12019.2
     }
   }
 ]

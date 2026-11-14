@@ -3,7 +3,7 @@ VENV   := .venv
 BIN    := $(VENV)/bin
 
 .DEFAULT_GOAL := help
-.PHONY: help setup test test-unit test-integration test-cov lint format check seed run chat smoke samples clean
+.PHONY: help setup test test-unit test-integration test-cov lint format check seed run chat samples clean
 
 help: ## Show available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
@@ -51,9 +51,6 @@ chat: ## Start an interactive chat session
 clean: ## Remove caches (keeps .venv and data)
 	rm -rf .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +
-
-smoke: ## Check the local Ollama model (needs Ollama running)
-	$(BIN)/python scripts/llm_smoke.py
 
 samples: ## Run samples/requests.json against the local model and check expectations
 	$(BIN)/python scripts/run_samples.py

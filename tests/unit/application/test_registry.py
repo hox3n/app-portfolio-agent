@@ -10,7 +10,6 @@ from pydantic import BaseModel, ConfigDict, Field
 from portfolio_agent.application.schemas import ToolError
 from portfolio_agent.application.tools.registry import (
     Tool,
-    ToolCallError,
     ToolExecutionError,
     ToolRegistry,
     _trace_tool_outputs,
@@ -108,12 +107,6 @@ def test_llm_content_is_json() -> None:
     assert json.loads(REGISTRY.call("fail", {"n": 1}).to_llm_content())["error"]["code"] == (
         "too_big"
     )
-
-
-def test_call_typed() -> None:
-    assert REGISTRY.call_typed("double", {"n": 3}, EchoOut).doubled == 6
-    with pytest.raises(ToolCallError, match="n is too big"):
-        REGISTRY.call_typed("fail", {"n": 1}, EchoOut)
 
 
 def test_every_call_is_logged(caplog: pytest.LogCaptureFixture) -> None:

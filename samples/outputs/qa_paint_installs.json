@@ -2,8 +2,8 @@
   {
     "request": "How many installs did Paint get on iOS in 2024?",
     "result": {
-      "trace_id": "bb7f156310cc40c3",
-      "session_id": "d4e5cded2a0b",
+      "trace_id": "5ba87b0e46bf4853",
+      "session_id": "66062511e6d4",
       "workflow": "qa",
       "status": "ok",
       "summary": "Paint got 756,830 installs on iOS in 2024 across all countries.",
@@ -83,18 +83,18 @@
           "iOS"
         ],
         "countries": null,
-        "reason": "The user is asking for a specific metric (installs) filtered by app, platform and year."
+        "reason": "The user is asking for a specific metric (install count) filtered by app, platform and year."
       },
       "tool_calls": [
         {
           "tool": "fetch_metrics",
           "ok": true,
-          "duration_ms": 22.86,
+          "duration_ms": 22.4,
           "error_code": null
         }
       ],
       "warnings": [],
-      "duration_ms": 11335.6
+      "duration_ms": 10930.0
     }
   }
 ]

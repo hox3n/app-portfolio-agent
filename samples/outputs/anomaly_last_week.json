@@ -2,8 +2,8 @@
   {
     "request": "Anything unusual last week?",
     "result": {
-      "trace_id": "4cf56882f7214d9b",
-      "session_id": "357f7995585a",
+      "trace_id": "b756f8f5afcb46aa",
+      "session_id": "b6b8401c4a7b",
       "workflow": "anomaly_check",
       "status": "ok",
       "summary": "During the period from January 25 to January 31, 2025, there were a total of ten anomalies detected compared to the previous week. The most significant positive anomaly involved Countdown / iOS / France across revenue and installs with increases exceeding one hundred percent. Conversely, News / iOS / UK showed a sharp decline in roas while experiencing large cost increases. Paint / Android / Germany also recorded substantial drops in both roas and revenue during this timeframe.",
@@ -229,24 +229,24 @@
         {
           "tool": "compute_kpis",
           "ok": true,
-          "duration_ms": 19.91,
+          "duration_ms": 24.57,
           "error_code": null
         },
         {
           "tool": "compute_kpis",
           "ok": true,
-          "duration_ms": 15.53,
+          "duration_ms": 16.74,
           "error_code": null
         },
         {
           "tool": "detect_anomalies",
           "ok": true,
-          "duration_ms": 0.25,
+          "duration_ms": 0.82,
           "error_code": null
         }
       ],
       "warnings": [],
-      "duration_ms": 11018.6
+      "duration_ms": 10253.7
     }
   }
 ]

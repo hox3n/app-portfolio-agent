@@ -2,8 +2,8 @@
   {
     "request": "Which app has the highest revenue per install?",
     "result": {
-      "trace_id": "ac81bcf978bc4ab2",
-      "session_id": "c15c33ee4642",
+      "trace_id": "a34225980b4e4627",
+      "session_id": "c36d7cf4cc17",
       "workflow": "qa",
       "status": "ok",
       "summary": "Fitness has the highest revenue per install at $1.725.",
@@ -91,12 +91,12 @@
         {
           "tool": "compute_kpis",
           "ok": true,
-          "duration_ms": 35.44,
+          "duration_ms": 48.01,
           "error_code": null
         }
       ],
       "warnings": [],
-      "duration_ms": 10619.7
+      "duration_ms": 10594.1
     }
   }
 ]

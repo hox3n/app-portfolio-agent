@@ -11,8 +11,21 @@ _DATE = re.compile(
     re.IGNORECASE,
 )
 _RANK = re.compile(r"\b(?:top|first|last|largest|biggest)\s+\d+\b", re.IGNORECASE)
-_NUMBER = re.compile(r"(?<![\w.])-?\$?\d[\d,]*(?:\.\d+)?(?:[kKmM]\b)?%?")
-_SCALE = {"k": 1_000, "m": 1_000_000}
+_NUMBER = re.compile(
+    r"(?<![\w.])-?\$?(\d[\d,]*(?:\.\d+)?)"
+    r"(?:\s?(thousand|million|billion|mn|bn)\b|([kKmMbB])\b)?%?",
+    re.IGNORECASE,
+)
+_SCALE = {
+    "k": 1_000,
+    "thousand": 1_000,
+    "m": 1_000_000,
+    "mn": 1_000_000,
+    "million": 1_000_000,
+    "b": 1_000_000_000,
+    "bn": 1_000_000_000,
+    "billion": 1_000_000_000,
+}
 _WORDS = {
     word: str(n)
     for n, word in enumerate(
@@ -75,10 +88,11 @@ def _prepare(text: str) -> str:
 def unsupported_numbers(text: str, data: Any) -> list[str]:
     values = numbers_in(data)
     unsupported: list[str] = []
-    for token in _NUMBER.findall(_prepare(text)):
-        raw = token.replace("$", "").replace(",", "").replace("%", "")
-        scale = _SCALE.get(raw[-1].lower(), 1) if raw[-1].isalpha() else 1
-        raw = raw.rstrip("kKmM")
+    for match in _NUMBER.finditer(_prepare(text)):
+        token = match.group(0).strip()
+        raw = match.group(1).replace(",", "")
+        suffix = (match.group(2) or match.group(3) or "").lower()
+        scale = _SCALE.get(suffix, 1)
         try:
             number = abs(float(raw)) * scale
         except ValueError:

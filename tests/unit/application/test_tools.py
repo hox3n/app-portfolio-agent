@@ -2,6 +2,7 @@
 
 from datetime import date
 from pathlib import Path
+from typing import Any, TypeVar
 
 import pytest
 
@@ -21,7 +22,16 @@ from portfolio_agent.domain.budget_rules import BudgetRuleConfig
 from portfolio_agent.infrastructure.db.duckdb_repository import DuckDBMetricsRepository
 from portfolio_agent.infrastructure.storage.csv_exporter import CsvExporter
 
+OutputT = TypeVar("OutputT")
+
 JANUARY = {"start": "2025-01-01", "end": "2025-01-31"}
+
+
+def call_typed(registry: ToolRegistry, name: str, args: Any, output_type: type[OutputT]) -> OutputT:
+    result = registry.call(name, args)
+    assert result.error is None, result.error
+    assert isinstance(result.output, output_type)
+    return result.output
 
 
 @pytest.fixture
@@ -47,14 +57,14 @@ def test_llm_sees_only_query_tools(registry: ToolRegistry) -> None:
 
 
 def test_get_schema(registry: ToolRegistry) -> None:
-    out = registry.call_typed("get_schema", {}, SchemaOutput)
+    out = call_typed(registry, "get_schema", {}, SchemaOutput)
     assert out.dataset.date_max == date(2025, 1, 31)
     assert out.kpi_definitions["roas"].startswith("revenue / ua_cost")
     assert "revenue per install" in out.kpi_definitions["arpi"]
 
 
 def test_run_sql_applies_limit_and_reports_truncation(registry: ToolRegistry) -> None:
-    out = registry.call_typed("run_sql", {"sql": "SELECT * FROM app_metrics"}, RunSqlOutput)
+    out = call_typed(registry, "run_sql", {"sql": "SELECT * FROM app_metrics"}, RunSqlOutput)
     assert out.row_count == 20
     assert out.truncated is True
 
@@ -71,14 +81,14 @@ def test_run_sql_reports_database_errors(registry: ToolRegistry) -> None:
 
 
 def test_fetch_metrics_with_filter(registry: ToolRegistry) -> None:
-    out = registry.call_typed("fetch_metrics", {**JANUARY, "apps": ["News"]}, MetricsOutput)
+    out = call_typed(registry, "fetch_metrics", {**JANUARY, "apps": ["News"]}, MetricsOutput)
     assert len(out.rows) == 10
     assert {r.app_name for r in out.rows} == {"News"}
 
 
 def test_single_filter_value_accepted_as_list(registry: ToolRegistry) -> None:
     args = {**JANUARY, "apps": "Puzzle", "platforms": "Android", "countries": "India"}
-    out = registry.call_typed("compute_kpis", args, KpisOutput)
+    out = call_typed(registry, "compute_kpis", args, KpisOutput)
     assert [k.pair for k in out.kpis] == [("Puzzle", "Android", "India")]
 
 
@@ -107,15 +117,15 @@ def test_end_before_start_rejected(registry: ToolRegistry) -> None:
 
 
 def test_compute_kpis(registry: ToolRegistry) -> None:
-    out = registry.call_typed("compute_kpis", JANUARY, KpisOutput)
+    out = call_typed(registry, "compute_kpis", JANUARY, KpisOutput)
     assert len(out.kpis) == 50
     by_pair = {k.pair: k for k in out.kpis}
     assert (by_pair[("Puzzle", "Android", "India")].roas or 0) < 0.8
 
 
 def test_budget_rules_flag_planted_pairs(registry: ToolRegistry) -> None:
-    kpis = registry.call_typed("compute_kpis", JANUARY, KpisOutput).kpis
-    out = registry.call_typed("apply_budget_rules", {"kpis": kpis}, DecisionsOutput)
+    kpis = call_typed(registry, "compute_kpis", JANUARY, KpisOutput).kpis
+    out = call_typed(registry, "apply_budget_rules", {"kpis": kpis}, DecisionsOutput)
     actions = {(d.app_name, d.platform, d.country): d.action for d in out.decisions}
     assert actions[("Puzzle", "Android", "India")] == "cut"
     assert actions[("Countdown", "Android", "USA")] == "cut"
@@ -124,14 +134,14 @@ def test_budget_rules_flag_planted_pairs(registry: ToolRegistry) -> None:
 
 
 def test_anomalies_find_planted_events(registry: ToolRegistry) -> None:
-    previous = registry.call_typed(
-        "compute_kpis", {"start": "2025-01-06", "end": "2025-01-12"}, KpisOutput
+    previous = call_typed(
+        registry, "compute_kpis", {"start": "2025-01-06", "end": "2025-01-12"}, KpisOutput
     ).kpis
-    current = registry.call_typed(
-        "compute_kpis", {"start": "2025-01-25", "end": "2025-01-31"}, KpisOutput
+    current = call_typed(
+        registry, "compute_kpis", {"start": "2025-01-25", "end": "2025-01-31"}, KpisOutput
     ).kpis
-    out = registry.call_typed(
-        "detect_anomalies", {"previous": previous, "current": current}, AnomaliesOutput
+    out = call_typed(
+        registry, "detect_anomalies", {"previous": previous, "current": current}, AnomaliesOutput
     )
     found = {(a.app_name, a.platform, a.country, a.metric) for a in out.anomalies}
     assert ("News", "iOS", "UK", "cpi") in found
@@ -140,7 +150,7 @@ def test_anomalies_find_planted_events(registry: ToolRegistry) -> None:
 
 
 def test_anomalies_need_both_periods(registry: ToolRegistry) -> None:
-    kpis = registry.call_typed("compute_kpis", JANUARY, KpisOutput).kpis
+    kpis = call_typed(registry, "compute_kpis", JANUARY, KpisOutput).kpis
     assert error_code(registry, "detect_anomalies", {"previous": [], "current": kpis}) == (
         "invalid_input"
     )
@@ -148,7 +158,7 @@ def test_anomalies_need_both_periods(registry: ToolRegistry) -> None:
 
 def test_export_csv_escapes_formulas(registry: ToolRegistry, tmp_path: Path) -> None:
     args = {"columns": ["a", "b"], "rows": [{"a": 1, "b": "=HYPERLINK()"}], "filename": "t1"}
-    out = registry.call_typed("export_csv", args, ExportResult)
+    out = call_typed(registry, "export_csv", args, ExportResult)
     path = Path(out.path)
     assert path.parent == tmp_path.resolve()
     assert path.read_text().splitlines() == ["a,b", "1,'=HYPERLINK()"]
@@ -161,8 +171,8 @@ def test_export_rejects_path_traversal(registry: ToolRegistry) -> None:
 
 def test_compute_kpis_grouped_by_country(registry: ToolRegistry) -> None:
     args = {"start": "2024-01-01", "end": "2024-12-31", "countries": ["France", "Germany"]}
-    grouped = registry.call_typed("compute_kpis", {**args, "group_by": "country"}, KpisOutput)
-    per_pair = registry.call_typed("compute_kpis", args, KpisOutput)
+    grouped = call_typed(registry, "compute_kpis", {**args, "group_by": "country"}, KpisOutput)
+    per_pair = call_typed(registry, "compute_kpis", args, KpisOutput)
 
     assert grouped.kpis == []
     assert grouped.groups is not None

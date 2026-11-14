@@ -237,7 +237,7 @@ Every setting lives in `.env` (template: [.env.example](.env.example)); values a
 ## 6. How to test and verify
 
 ```bash
-make test      # 246 tests: unit + end-to-end graph tests (no Ollama needed, ~3 s)
+make test      # 245 tests: unit + end-to-end graph tests (no Ollama needed, ~3 s)
 make lint      # ruff (style), ruff format, mypy --strict
 make samples   # 14 sample turns against the real local model, checked against expected outcomes
 ```
@@ -479,11 +479,10 @@ src/portfolio_agent/
 tests/unit/            # domain, application, infrastructure, interfaces
 tests/integration/     # full agent graph with a scripted LLM
 samples/               # sample requests with expected outcomes + saved outputs
-scripts/               # run_samples.py, llm_smoke.py
-docs/                  # ARCHITECTURE.md (detailed design), DEVELOPMENT_PLAN.md (how it was built)
+scripts/               # run_samples.py (make samples)
+docs/                  # ARCHITECTURE.md (detailed design)
 ```
 
-[docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) records how the project was built step by step and the decisions taken along the way.
 
 ## License
 

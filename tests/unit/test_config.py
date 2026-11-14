@@ -19,7 +19,6 @@ def test_defaults() -> None:
     s = Settings()
     assert s.ollama_model == "qwen3.5:4b"
     assert s.ollama_think is False
-    assert s.llm_provider == "ollama"
     assert s.max_tool_steps == 6
 
 

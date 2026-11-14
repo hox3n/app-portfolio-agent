@@ -2,8 +2,8 @@
   {
     "request": "Make a report comparing profit and ROAS between France and Germany in 2024",
     "result": {
-      "trace_id": "b0ddf6181bbd43ab",
-      "session_id": "5b63c7eb52c3",
+      "trace_id": "499a8b226d5c4a46",
+      "session_id": "b6eda339a09d",
       "workflow": "qa",
       "status": "ok",
       "summary": "In 2024, Germany generated $351,179 in profit with a ROAS of 1.27x, while France earned $248,592 and achieved a lower ROAS of 1.21x.",
@@ -61,12 +61,12 @@
         {
           "tool": "compute_kpis",
           "ok": true,
-          "duration_ms": 28.59,
+          "duration_ms": 21.21,
           "error_code": null
         }
       ],
       "warnings": [],
-      "duration_ms": 12008.1
+      "duration_ms": 11567.4
     }
   }
 ]

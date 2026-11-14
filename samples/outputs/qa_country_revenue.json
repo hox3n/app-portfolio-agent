@@ -2,8 +2,8 @@
   {
     "request": "Which country made the most revenue in 2024?",
     "result": {
-      "trace_id": "3d38ef8c251f4009",
-      "session_id": "c0857ee2fb97",
+      "trace_id": "a1fbff31d5764183",
+      "session_id": "03bd28a21e75",
       "workflow": "qa",
       "status": "ok",
       "summary": "The USA made the most revenue in 2024, with $7,566,612.44 compared to Germany's $1,633,651.45 and other countries' lower amounts.",
@@ -91,12 +91,12 @@
         {
           "tool": "compute_kpis",
           "ok": true,
-          "duration_ms": 40.97,
+          "duration_ms": 29.78,
           "error_code": null
         }
       ],
       "warnings": [],
-      "duration_ms": 14935.2
+      "duration_ms": 13948.1
     }
   }
 ]

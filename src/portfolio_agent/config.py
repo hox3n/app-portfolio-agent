@@ -27,7 +27,6 @@ class Settings(BaseSettings):
     seed_start: date = date(2024, 1, 1)
     seed_end: date = date(2025, 1, 31)
 
-    llm_provider: Literal["ollama"] = "ollama"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3.5:4b"
     ollama_think: bool = False
