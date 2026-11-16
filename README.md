@@ -475,7 +475,7 @@ User text and model output are treated as untrusted. Each defense is enforced in
 
 ## 10. Real-world usage
 
-**Is this solution currently used in any business?** Not in production today.
+**Is this solution currently used in any business?** Not in production today. To my knowledge it isn't deployed anywhere. The idea comes from an earlier project of mine that tackled a similar problem.
 
 ### Who could use it
 
@@ -490,7 +490,10 @@ User text and model output are treated as untrusted. Each defense is enforced in
 - **Monitoring:** tracing (LangSmith or OpenTelemetry) and dashboards for latency, error rate, refusal rate, tool-error rate and fallback rate; alerts; an evaluation suite in CI that blocks prompt or model changes that lower the pass rate.
 - **Human in the loop:** recommendations stay suggestions. Any budget change happens in the ad network after a person approves it, and decisions are recorded with the agent's reasoning for review.
 - **Compliance:** the data is aggregated (no personal data), but model hosting must still respect data-residency and confidentiality agreements (a local or private-cloud model, or a hosted provider under a DPA); retention policies for logs and sessions; documented decision rules.
-- **Reliability:** a stronger model, persistent sessions, caching of repeated queries, horizontal scaling behind an API, and cohort-based KPIs before decisions rely on payback.
+- **Model:** a more powerful hosted model, or a specialized model fine-tuned on the publisher's metrics and typical questions, behind the existing `LLMClient` port. This would mean fewer template fallbacks and faster answers.
+- **Infrastructure:** the agent runs as a containerized API service with horizontal scaling, health checks and CI/CD deployment, rather than as a local CLI.
+- **Storage:** Redis for sessions (behind the `SessionStore` port), so conversations survive restarts and work across instances. A database (e.g. Postgres) stores every question, answer, plan, tool call and error for auditing, debugging and building evaluation sets from real usage.
+- **Reliability:** caching of repeated queries, and cohort-based KPIs before decisions rely on payback.
 
 ## 11. Project structure
 
